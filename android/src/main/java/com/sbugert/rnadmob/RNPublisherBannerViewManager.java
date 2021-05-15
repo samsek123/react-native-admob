@@ -1,7 +1,7 @@
 package com.sbugert.rnadmob;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.view.View;
 
 import com.facebook.react.bridge.Arguments;
@@ -33,6 +33,7 @@ class ReactPublisherAdView extends ReactViewGroup implements AppEventListener {
     String[] testDevices;
     AdSize[] validAdSizes;
     String adUnitID;
+    String monsterID;
     AdSize adSize;
 
     public ReactPublisherAdView(final Context context) {
@@ -139,7 +140,7 @@ class ReactPublisherAdView extends ReactViewGroup implements AppEventListener {
         }
 
         if (adSizes.size() == 0) {
-            adSizes.add(AdSize.BANNER);
+            adSizes.add(new AdSize(300, 100));
         }
 
         AdSize[] adSizesArray = adSizes.toArray(new AdSize[adSizes.size()]);
@@ -155,6 +156,7 @@ class ReactPublisherAdView extends ReactViewGroup implements AppEventListener {
                 adRequestBuilder.addTestDevice(testDevice);
             }
         }
+        adRequestBuilder.addCustomTargeting("monster_id", this.monsterID);
         PublisherAdRequest adRequest = adRequestBuilder.build();
         this.adView.loadAd(adRequest);
     }
@@ -171,6 +173,10 @@ class ReactPublisherAdView extends ReactViewGroup implements AppEventListener {
 
     public void setTestDevices(String[] testDevices) {
         this.testDevices = testDevices;
+    }
+
+    public void setMonsterID(String monsterID) {
+        this.monsterID = monsterID;
     }
 
     public void setAdSize(AdSize adSize) {
@@ -197,6 +203,7 @@ public class RNPublisherBannerViewManager extends ViewGroupManager<ReactPublishe
     public static final String PROP_AD_SIZE = "adSize";
     public static final String PROP_VALID_AD_SIZES = "validAdSizes";
     public static final String PROP_AD_UNIT_ID = "adUnitID";
+    public static final String PROP_MONSTER_ID = "monsterID";
     public static final String PROP_TEST_DEVICES = "testDevices";
 
     public static final String EVENT_SIZE_CHANGE = "onSizeChange";
@@ -267,6 +274,11 @@ public class RNPublisherBannerViewManager extends ViewGroupManager<ReactPublishe
     @ReactProp(name = PROP_AD_UNIT_ID)
     public void setPropAdUnitID(final ReactPublisherAdView view, final String adUnitID) {
         view.setAdUnitID(adUnitID);
+    }
+
+    @ReactProp(name = PROP_MONSTER_ID)
+    public void setPropMonsterID(final ReactPublisherAdView view, final String monsterID) {
+        view.setMonsterID(monsterID);
     }
 
     @ReactProp(name = PROP_TEST_DEVICES)
